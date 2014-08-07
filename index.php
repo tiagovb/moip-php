@@ -24,6 +24,7 @@ $moip->setReason('Teste do Moip-PHP');
 $moip->validate('Basic');
 
 $moip->send();
+echo '<pre>';
 print_r($moip->getAnswer());
 
 ?>
