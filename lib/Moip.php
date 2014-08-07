@@ -50,16 +50,29 @@ class Moip {
      * @var string
      */
     protected $uniqueID;
+    
+    
+    /**
+     * Constantes para métodos de pagamentos (Facilitando acesso interno/externo)
+     */
+    const PAYMENT_BILLET = 'billet';
+    const PAYMENT_FINANCING = 'financing';
+    const PAYMENT_DEBIT = 'debit';
+    const PAYMENT_CARD_CREDIT = 'creditCard';
+    const PAYMENT_CARD_DEBIT = 'debitCard';
+    
     /**
      * Associative array of payment's way
      *
      * @var array
-     */
-    protected $payment_ways = array('billet' => 'BoletoBancario',
-        'financing' => 'FinanciamentoBancario',
-        'debit' => 'DebitoBancario',
-        'creditCard' => 'CartaoCredito',
-        'debitCard' => 'CartaoDebito');
+     */        
+    protected $payment_ways = array(
+        self::PAYMENT_BILLET => 'BoletoBancario',
+        self::PAYMENT_FINANCING => 'FinanciamentoBancario',
+        self::PAYMENT_DEBIT => 'DebitoBancario',
+        self::PAYMENT_CARD_CREDIT => 'CartaoCredito',
+        self::PAYMENT_CARD_DEBIT => 'CartaoDebito'
+    );
     /**
      * Associative array of payment's institutions
      *
