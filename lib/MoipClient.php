@@ -8,7 +8,8 @@
  * @version 0.0.2
  * @license <a href="http://www.opensource.org/licenses/bsd-license.php">BSD License</a>
  */
-class MoIPClient {
+class MoipClient
+{
 
     /**
      * Method send()
@@ -19,14 +20,16 @@ class MoIPClient {
      * @param string $xml The XML request
      * @param string $url The server's URL
      * @param string $method Method used to send the request
-	 * @throws Exception
-	 * @return MoipResponse
+     * @throws Exception
+     * @return MoipResponse
      */
-    public function send($credentials, $xml, $url='https://desenvolvedor.moip.com.br/sandbox/ws/alpha/EnviarInstrucao/Unica', $method='POST') {
+    public function send($credentials, $xml, $url = 'https://desenvolvedor.moip.com.br/sandbox/ws/alpha/EnviarInstrucao/Unica', $method = 'POST')
+    {
         $header[] = "Authorization: Basic " . base64_encode($credentials);
-        if (!function_exists('curl_init')){
+        if (!function_exists('curl_init'))
+        {
             throw new Exception('This library needs cURL extension');
-		}
+        }
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
@@ -34,9 +37,11 @@ class MoIPClient {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/4.0");
 
-        if ($method == 'POST') curl_setopt($curl, CURLOPT_POST, true);
+        if ($method == 'POST')
+            curl_setopt($curl, CURLOPT_POST, true);
 
-		if ($xml != '') curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
+        if ($xml != '')
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $ret = curl_exec($curl);
         $err = curl_error($curl);
@@ -46,15 +51,17 @@ class MoIPClient {
     }
 
     /**
-	 * @param string $credentials token / key authentication Moip
-	 * @param string $xml url request
-	 * @param string $url url request
-	 * @param string $error errors
-	 * @return MoipResponse
+     * @param string $credentials token / key authentication Moip
+     * @param string $xml url request
+     * @param string $url url request
+     * @param string $error errors
+     * @return MoipResponse
      */
-    function curlPost($credentials, $xml, $url, $error=null) {
+    function curlPost($credentials, $xml, $url, $error = null)
+    {
 
-        if (!$error) {
+        if (!$error)
+        {
             $header[] = "Expect:";
             $header[] = "Authorization: Basic " . base64_encode($credentials);
 
@@ -83,11 +90,11 @@ class MoIPClient {
                 return new MoipResponse(array('response' => false, 'error' => 'Authentication failed', 'xml' => null));
             else
                 return new MoipResponse(array('response' => false, 'error' => $err, 'xml' => null));
-        } else {
+        } else
+        {
             return new MoipResponse(array('response' => false, 'error' => $error, 'xml' => null));
         }
     }
-
 
     /**
      * @param string $credentials token / key authentication Moip
@@ -95,9 +102,11 @@ class MoIPClient {
      * @param string $error errors
      * @return MoipResponse
      */
-    function curlGet($credentials, $url, $error=null) {
+    function curlGet($credentials, $url, $error = null)
+    {
 
-        if (!$error) {
+        if (!$error)
+        {
             $header[] = "Expect:";
             $header[] = "Authorization: Basic " . base64_encode($credentials);
 
@@ -106,7 +115,7 @@ class MoIPClient {
                 CURLOPT_HTTPHEADER => $header,
                 CURLOPT_SSL_VERIFYPEER => false,
                 CURLOPT_RETURNTRANSFER => true
-                );
+            );
 
             curl_setopt_array($ch, $options);
             $ret = curl_exec($ch);
@@ -123,7 +132,8 @@ class MoIPClient {
                 return new MoipResponse(array('response' => false, 'error' => 'Authentication failed', 'xml' => null));
             else
                 return new MoipResponse(array('response' => false, 'error' => $err, 'xml' => null));
-        } else {
+        } else
+        {
             return new MoipResponse(array('response' => false, 'error' => $error, 'xml' => null));
         }
     }
@@ -138,20 +148,23 @@ class MoIPClient {
  * @property string $payment_url
  * @property string $token
  */
-class MoipResponse {
-	private $response;
+class MoipResponse
+{
 
-	function __construct(array $response)
-	{
-		$this->response = $response;
-	}
+    private $response;
 
-	function __get($name)
-	{
-		if (isset($this->response[$name]))
-		{
-			return $this->response[$name];
-		}
-		return null;
-	}
+    function __construct(array $response)
+    {
+        $this->response = $response;
+    }
+
+    function __get($name)
+    {
+        if (isset($this->response[$name]))
+        {
+            return $this->response[$name];
+        }
+        return null;
+    }
+
 }
