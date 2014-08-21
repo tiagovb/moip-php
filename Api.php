@@ -173,7 +173,8 @@ class Moip_Api
      */
     public function __construct()
     {
-        $this->setEnvironment();
+        //padrão development
+        $this->setEnvironment(Moip_Environment::ENVIRONMENT_DEV);
 
         if (!$this->payment_type)
         {
@@ -263,24 +264,24 @@ class Moip_Api
      * Define the environment for the API utilization.
      *
      * @param bool $testing If true, will use the sandbox environment
+     * @example development or production
      * @return Moip
      */
-    public function setEnvironment($testing = false)
+    public function setEnvironment($env)
     {
         if (empty($this->environment))
         {
             $this->environment = new Moip_Environment();
         }
 
-        if ($testing)
+        if (isset(Moip_Environment::$environmentArgs[$env]))
         {
-            $this->environment->name = "Sandbox";
-            $this->environment->base_url = "https://desenvolvedor.moip.com.br/sandbox";
+            $this->environment->name = Moip_Environment::$environmentArgs[$env]['name'];
+            $this->environment->base_url = Moip_Environment::$environmentArgs[$env]['base_url'];
         }
         else
         {
-            $this->environment->name = "Produção";
-            $this->environment->base_url = "https://www.moip.com.br";
+            $this->setError('Environment not found, type [development] or [production]');
         }
 
         return $this;
