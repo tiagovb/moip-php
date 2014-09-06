@@ -1,9 +1,9 @@
 <?php
 
-include_once "autoload.inc.php";
+include '../boot.php';
 
 function exampleBasicInstructions() {
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array(
         'key' => 'ABABABABABABABABABABABABABABABABABABABAB',
@@ -23,7 +23,7 @@ function exampleBasicInstructions() {
 
 function exampleIdentificationInstruction() {
 
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array('key' => 'ABABABABABABABABABABABABABABABABABABABAB', 'token' => '01010101010101010101010101010101'));
 
@@ -34,11 +34,11 @@ function exampleIdentificationInstruction() {
     $moip->setPayer(array('name' => 'Nome Sobrenome',
         'email' => 'email@cliente.com.br',
         'payerId' => 'id_usuario',
-        'billingAddress' => array('address' => 'Rua do Zézinho Coração',
+        'billingAddress' => array('address' => 'Rua do Zï¿½zinho Coraï¿½ï¿½o',
             'number' => '45',
             'complement' => 'z',
-            'city' => 'São Paulo',
-            'neighborhood' => 'Palhaço Jão',
+            'city' => 'Sï¿½o Paulo',
+            'neighborhood' => 'Palhaï¿½o Jï¿½o',
             'state' => 'SP',
             'country' => 'BRA',
             'zipCode' => '01230-000',
@@ -50,7 +50,7 @@ function exampleIdentificationInstruction() {
 
 function exampleQueryParcels() {
 
-$moip = new Moip();
+$moip = new Moip_Api();
 $moip->setEnvironment('test');
 $moip->setCredential(array('key' => 'ABABABABABABABABABABABABABABABABABABABAB', 'token' => '01010101010101010101010101010101'));
 
@@ -59,7 +59,7 @@ print_r($moip->queryParcel('integracao@labs.moip.com.br', '4', '1.99', '100.00')
 
 function exampleAddParcel($example='1') {
 
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array('key' => 'ABABABABABABABABABABABABABABABABABABABAB', 'token' => '01010101010101010101010101010101'));
     $moip->setUniqueID(false);
@@ -69,11 +69,11 @@ function exampleAddParcel($example='1') {
     $moip->setPayer(array('name' => 'Nome Sobrenome',
         'email' => 'email@cliente.com.br',
         'payerId' => 'id_usuario',
-        'billingAddress' => array('address' => 'Rua do Zézinho Coração',
+        'billingAddress' => array('address' => 'Rua do Zï¿½zinho Coraï¿½ï¿½o',
             'number' => '45',
             'complement' => 'z',
-            'city' => 'São Paulo',
-            'neighborhood' => 'Palhaço Jão',
+            'city' => 'Sï¿½o Paulo',
+            'neighborhood' => 'Palhaï¿½o Jï¿½o',
             'state' => 'SP',
             'country' => 'BRA',
             'zipCode' => '01230-000',
@@ -96,7 +96,7 @@ function exampleAddParcel($example='1') {
 }
 
 function exampleAddComission($example='1') {
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array('key' => 'ABABABABABABABABABABABABABABABABABABABAB', 'token' => '01010101010101010101010101010101'));
     $moip->setUniqueID(false);
@@ -106,11 +106,11 @@ function exampleAddComission($example='1') {
     $moip->setPayer(array('name' => 'Nome Sobrenome',
         'email' => 'email@cliente.com.br',
         'payerId' => 'id_usuario',
-        'billingAddress' => array('address' => 'Rua do Zézinho Coração',
+        'billingAddress' => array('address' => 'Rua do Zï¿½zinho Coraï¿½ï¿½o',
             'number' => '45',
             'complement' => 'z',
-            'city' => 'São Paulo',
-            'neighborhood' => 'Palhaço Jão',
+            'city' => 'Sï¿½o Paulo',
+            'neighborhood' => 'Palhaï¿½o Jï¿½o',
             'state' => 'SP',
             'country' => 'BRA',
             'zipCode' => '01230-000',
@@ -118,22 +118,22 @@ function exampleAddComission($example='1') {
     $moip->validate('Identification');
 
     if ($example == '1')
-        $moip->addComission('Razão do Split', 'recebedor_secundario', '12.00');
+        $moip->addComission('Razï¿½o do Split', 'recebedor_secundario', '12.00');
     else if ($example == '2')
-        $moip->addComission('Razão do Split', 'recebedor_secundario', '12.00', true);
+        $moip->addComission('Razï¿½o do Split', 'recebedor_secundario', '12.00', true);
     else if ($example == '3')
-        $moip->addComission('Razão do Split', 'recebedor_secundario', '12.00', true, 'recebedor_secundario_3');
+        $moip->addComission('Razï¿½o do Split', 'recebedor_secundario', '12.00', true, 'recebedor_secundario_3');
     else if ($example == '4') {
-        $moip->addComission('Razão do Split', 'recebedor_secundario', '5.00');
-        $moip->addComission('Razão do Split', 'recebedor_secundario', '2.00', true);
-        $moip->addComission('Razão do Split', 'recebedor_secundario_2', '12.00', true, 'recebedor_secundario_3');
+        $moip->addComission('Razï¿½o do Split', 'recebedor_secundario', '5.00');
+        $moip->addComission('Razï¿½o do Split', 'recebedor_secundario', '2.00', true);
+        $moip->addComission('Razï¿½o do Split', 'recebedor_secundario_2', '12.00', true, 'recebedor_secundario_3');
     }
 
     print_r($moip->send());
 }
 
 function exampleSetReceiver() {
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array('key' => 'ABABABABABABABABABABABABABABABABABABABAB', 'token' => '01010101010101010101010101010101'));
 
@@ -144,11 +144,11 @@ function exampleSetReceiver() {
     $moip->setPayer(array('name' => 'Nome Sobrenome',
         'email' => 'email@cliente.com.br',
         'payerId' => 'id_usuario',
-        'billingAddress' => array('address' => 'Rua do Zézinho Coração',
+        'billingAddress' => array('address' => 'Rua do Zï¿½zinho Coraï¿½ï¿½o',
             'number' => '45',
             'complement' => 'z',
-            'city' => 'São Paulo',
-            'neighborhood' => 'Palhaço Jão',
+            'city' => 'Sï¿½o Paulo',
+            'neighborhood' => 'Palhaï¿½o Jï¿½o',
             'state' => 'SP',
             'country' => 'BRA',
             'zipCode' => '01230-000',
@@ -161,7 +161,7 @@ function exampleSetReceiver() {
 }
 
 function exampleConfigPaymentWay($param) {
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array('key' => 'ABABABABABABABABABABABABABABABABABABABAB', 'token' => '01010101010101010101010101010101'));
 
@@ -172,11 +172,11 @@ function exampleConfigPaymentWay($param) {
     $moip->setPayer(array('name' => 'Nome Sobrenome',
         'email' => 'email@cliente.com.br',
         'payerId' => 'id_usuario',
-        'billingAddress' => array('address' => 'Rua do Zézinho Coração',
+        'billingAddress' => array('address' => 'Rua do Zï¿½zinho Coraï¿½ï¿½o',
             'number' => '45',
             'complement' => 'z',
-            'city' => 'São Paulo',
-            'neighborhood' => 'Palhaço Jão',
+            'city' => 'Sï¿½o Paulo',
+            'neighborhood' => 'Palhaï¿½o Jï¿½o',
             'state' => 'SP',
             'country' => 'BRA',
             'zipCode' => '01230-000',
@@ -192,7 +192,7 @@ function exampleConfigPaymentWay($param) {
 
 function exampleFull() {
 
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array('key' => 'ABABABABABABABABABABABABABABABABABABABAB', 'token' => '01010101010101010101010101010101'));
     $moip->setUniqueID(false);
@@ -202,11 +202,11 @@ function exampleFull() {
     $moip->setPayer(array('name' => 'Nome Sobrenome',
         'email' => 'email@cliente.com.br',
         'payerId' => 'id_usuario',
-        'billingAddress' => array('address' => 'Rua do Zézinho Coração',
+        'billingAddress' => array('address' => 'Rua do Zï¿½zinho Coraï¿½ï¿½o',
             'number' => '45',
             'complement' => 'z',
-            'city' => 'São Paulo',
-            'neighborhood' => 'Palhaço Jão',
+            'city' => 'Sï¿½o Paulo',
+            'neighborhood' => 'Palhaï¿½o Jï¿½o',
             'state' => 'SP',
             'country' => 'BRA',
             'zipCode' => '01230-000',
@@ -219,9 +219,9 @@ function exampleFull() {
     $moip->addParcel('5', '7', '1.00');
     $moip->addParcel('8', '12', null, true);
 
-    $moip->addComission('Razão do Split', 'recebedor_secundario', '5.00');
-    $moip->addComission('Razão do Split', 'recebedor_secundario', '2.00', true);
-    $moip->addComission('Razão do Split', 'recebedor_secundario_2', '12.00', true, 'recebedor_secundario_3');
+    $moip->addComission('Razï¿½o do Split', 'recebedor_secundario', '5.00');
+    $moip->addComission('Razï¿½o do Split', 'recebedor_secundario', '2.00', true);
+    $moip->addComission('Razï¿½o do Split', 'recebedor_secundario_2', '12.00', true, 'recebedor_secundario_3');
 
     $moip->addPaymentWay('creditCard');
     $moip->addPaymentWay('billet');

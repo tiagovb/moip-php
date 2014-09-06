@@ -5,7 +5,7 @@ O Moip-PHP é uma biblioteca que implementa uma camada de abstração para gera�
 
     include_once "autoload.inc.php";
  
-    $moip = new Moip();
+    $moip = new Moip_Api();
     $moip->setEnvironment('test');
     $moip->setCredential(array(
         'key' => 'ABABABABABABABABABABABABABABABABABABABAB',
@@ -25,7 +25,7 @@ O Moip-PHP utiliza o padrão Fluent Interfaces, portanto, você pode fazer o exe
 
     include_once "autoload.inc.php";
  
-    $moip = new Moip(); 
+    $moip = new Moip_Api(); 
     print_r($moip->setEnvironment('test')
             ->setCredential(array(
         'key' => 'ABABABABABABABABABABABABABABABABABABABAB',
@@ -44,13 +44,13 @@ Veja baixo relação e detalhes dos métodos disponíveis que você pode utiliza
 
 -------------------------------------
 
-Moip()
+Moip_Api()
 ----------
 Método construtor.
 
-Moip()
+Moip_Api()
 
-    $moip = new Moip();
+    $moip = new Moip_Api();
 -------------------------------------
 
 setEnvironment()
@@ -372,7 +372,7 @@ O método getXML() irá retornar o XML gerado com todos os atributos que você c
 
 getXML()
 
-	$moip = new Moip();
+	$moip = new Moip_Api();
 	$moip->setEnvironment('test');
 	$moip->setCredential(array(
 	    'key' => 'ABABABABABABABABABABABABABABABABABABABAB',
@@ -409,7 +409,7 @@ O método send() executa o envio da instrução ao Moip, e retorna os dados de r
 
 send()
 
-	$moip = new Moip();
+	$moip = new Moip_Api();
 	$moip->setEnvironment('test');
 	$moip->setCredential(array(
 	    'key' => 'ABABABABABABABABABABABABABABABABABABABAB',
@@ -442,7 +442,7 @@ O método getAnswer() retorna os dados de resposta do Moip em forma de objeto.
 
 getAnswer()
 
-	$moip = new Moip();
+	$moip = new Moip_Api();
 	$moip->setEnvironment('test');
 	$moip->setCredential(array(
 	    'key' => 'ABABABABABABABABABABABABABABABABABABABAB',
@@ -494,7 +494,7 @@ $rate : Number
 
 $simulatedValue: Number
 
-        $moip = new Moip();
+        $moip = new Moip_Api();
         $moip->setEnvironment('test');
         $moip->setCredential(array(
             'key' => 'ABABABABABABABABABABABABABABABABABABABAB',

@@ -8,10 +8,10 @@
   exampleQueryParcels();
  * 
  */
-include_once "autoload.inc.php";
+include '../boot.php';
 
-$moip = new Moip();
-$moip->setEnvironment('test');
+$moip = new Moip_Api();
+$moip->setEnvironment(Moip_Environment::ENVIRONMENT_DEV);
 $moip->setCredential(array(
     'key' => 'ABABABABABABABABABABABABABABABABABABABAB',
     'token' => '01010101010101010101010101010101'

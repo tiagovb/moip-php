@@ -1,0 +1,20 @@
+{
+    "name": "jeanjar/moip-php",
+    "description": "Fork da Biblioteca de integração com o MoIP em PHP",
+    "license": "Apache v2",
+    "authors": [
+        {
+            "name": "Jean Jar Pereira de Araújo",
+            "email": "jeanjpa@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "electrolinux/phpquery": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "Moip": "src/"
+        }
+    }
+}
