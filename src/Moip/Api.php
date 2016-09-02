@@ -8,7 +8,7 @@ class Moip_Api
      *
      * @var string
      */
-    public $encoding = 'UTF-8';
+    public $encoding = 'ISO-8859-1';
 
     /**
      * Associative array with two keys. 'key'=>'your_key','token'=>'your_token'
@@ -52,20 +52,21 @@ class Moip_Api
      *
      * @var array
      */
-    protected $payment_ways = array(
+    protected $payment_ways = [
         self::PAYMENT_BILLET => 'BoletoBancario',
         self::PAYMENT_FINANCING => 'FinanciamentoBancario',
         self::PAYMENT_DEBIT => 'DebitoBancario',
         self::PAYMENT_CARD_CREDIT => 'CartaoCredito',
         self::PAYMENT_CARD_DEBIT => 'CartaoDebito'
-    );
+    ];
 
     /**
      * Associative array of payment's institutions
      *
      * @var array
      */
-    protected $institution = array('moip' => 'MoIP',
+    protected $institution = [
+        'moip' => 'MoIP',
         'visa' => 'Visa',
         'american_express' => 'AmericanExpress',
         'mastercard' => 'Mastercard',
@@ -79,21 +80,21 @@ class Moip_Api
         'hipercard' => 'Hipercard',
         'paggo' => 'Paggo', //oi paggo
         'banrisul' => 'Banrisul'
-    );
+    ];
 
     /**
      * Associative array of delivery's type
      *
      * @var array
      */
-    protected $delivery_type = array('proprio' => 'Proprio', 'correios' => 'Correios');
+    protected $delivery_type = ['proprio' => 'Proprio', 'correios' => 'Correios'];
 
     /**
      * Associative array with type of delivery's time
      *
      * @var array
      */
-    protected $delivery_type_time = array('corridos' => 'Corridos', 'uteis' => 'Uteis');
+    protected $delivery_type_time = ['corridos' => 'Corridos', 'uteis' => 'Uteis'];
 
     /**
      * Payment method
@@ -154,7 +155,7 @@ class Moip_Api
     /**
      * @var array
      */
-    protected $payment_way = array();
+    protected $payment_way = [];
 
     /**
      * @var float
@@ -176,28 +177,30 @@ class Moip_Api
         //padrão development
         $this->setEnvironment(Moip_Environment::ENVIRONMENT_DEV);
 
-        if (!$this->payment_type)
-        {
+        if (!$this->payment_type) {
             $this->payment_type = 'Basic';
         }
 
         $this->initXMLObject();
     }
 
+    /**
+     * @param $text
+     * @param bool $post
+     *
+     * @return mixed|string
+     */
     private function convert_encoding($text, $post = false)
     {
-        if ($post)
-        {
-            return mb_convert_encoding($text, 'UTF-8');
-        }
-        else
-        {
+        if ($post) {
+            return mb_convert_encoding($text, 'ISO-8859-1');
+        } else {
             /* No need to convert if its already in utf-8 */
-            if ($this->encoding === 'UTF-8')
-            {
+            if ($this->encoding === 'ISO-8859-1') {
                 return $text;
             }
-            return mb_convert_encoding($text, $this->encoding, 'UTF-8');
+
+            return mb_convert_encoding($text, $this->encoding, 'ISO-8859-1');
         }
     }
 
@@ -221,17 +224,15 @@ class Moip_Api
      * Define the payment's type between 'Basic' or 'Identification'
      *
      * @param string $tipo Can be 'Basic' or 'Identification'
+     *
      * @return Moip
      * @access public
      */
     public function setPaymentType($tipo)
     {
-        if ($tipo == 'Basic' || $tipo == 'Identification')
-        {
+        if ($tipo == 'Basic' || $tipo == 'Identification') {
             $this->payment_type = $tipo;
-        }
-        else
-        {
+        } else {
             $this->setError("Error: The variable type must contain values 'Basic' or 'Identification'");
         }
 
@@ -244,17 +245,21 @@ class Moip_Api
      * Set the credentials(key,token) required for the API authentication.
      *
      * @param array $credential Array with the credentials token and key
+     *
      * @return Moip
      * @access public
      */
     public function setCredential($credential)
     {
-        if (!isset($credential['token']) or ! isset($credential['key']) or
-                strlen($credential['token']) != 32 or
-                strlen($credential['key']) != 40)
+        if (!isset($credential['token']) or !isset($credential['key']) or
+            strlen($credential['token']) != 32 or
+            strlen($credential['key']) != 40
+        ) {
             $this->setError("Error: credential invalid");
+        }
 
         $this->credential = $credential;
+
         return $this;
     }
 
@@ -264,23 +269,20 @@ class Moip_Api
      * Define the environment for the API utilization.
      *
      * @param bool $testing If true, will use the sandbox environment
+     *
      * @example development or production
      * @return Moip
      */
     public function setEnvironment($env)
     {
-        if (empty($this->environment))
-        {
+        if (empty($this->environment)) {
             $this->environment = new Moip_Environment();
         }
 
-        if (isset(Moip_Environment::$environmentArgs[$env]))
-        {
+        if (isset(Moip_Environment::$environmentArgs[$env])) {
             $this->environment->name = Moip_Environment::$environmentArgs[$env]['name'];
             $this->environment->base_url = Moip_Environment::$environmentArgs[$env]['base_url'];
-        }
-        else
-        {
+        } else {
             $this->setError('Environment not found, type [development] or [production]');
         }
 
@@ -293,6 +295,7 @@ class Moip_Api
      * Make the data validation
      *
      * @param string $validateType Identification or Basic, defaults to Basic
+     *
      * @return Moip
      * @access public
      */
@@ -301,21 +304,24 @@ class Moip_Api
 
         $this->setPaymentType($validateType);
 
-        if (!isset($this->credential) or ! isset($this->reason) or ! isset($this->uniqueID))
+        if (!isset($this->credential) or !isset($this->reason) or !isset($this->uniqueID)) {
             $this->setError("[setCredential], [setReason] and [setUniqueID] are required");
+        }
 
         $payer = $this->payer;
 
-        if ($this->payment_type == 'Identification')
-        {
+        if ($this->payment_type == 'Identification') {
             $varNotSeted = '';
 
-            $dataValidate = array('name',
+            $dataValidate = [
+                'name',
                 'email',
                 'payerId',
-                'billingAddress');
+                'billingAddress'
+            ];
 
-            $dataValidateAddress = array('address',
+            $dataValidateAddress = [
+                'address',
                 'number',
                 'complement',
                 'neighborhood',
@@ -323,29 +329,26 @@ class Moip_Api
                 'state',
                 'country',
                 'zipCode',
-                'phone');
+                'phone'
+            ];
 
-            foreach ($dataValidate as $key)
-            {
-                if (!isset($payer[$key]))
-                {
+            foreach ($dataValidate as $key) {
+                if (!isset($payer[$key])) {
                     $varNotSeted .= ' [' . $key . '] ';
                 }
             }
 
-            foreach ($dataValidateAddress as $key)
-            {
-                if (!isset($payer['billingAddress'][$key]))
-                {
+            foreach ($dataValidateAddress as $key) {
+                if (!isset($payer['billingAddress'][$key])) {
                     $varNotSeted .= ' [' . $key . '] ';
                 }
             }
 
-            if ($varNotSeted !== '')
-            {
+            if ($varNotSeted !== '') {
                 $this->setError('Error: The following data required were not informed: ' . $varNotSeted . '.');
             }
         }
+
         return $this;
     }
 
@@ -355,6 +358,7 @@ class Moip_Api
      * Set the unique ID for the transaction
      *
      * @param int $id Unique ID for each transaction
+     *
      * @return Moip
      * @access public
      */
@@ -372,6 +376,7 @@ class Moip_Api
      * Set the short description of transaction. eg. Order Number.
      *
      * @param string $reason The reason fo transaction
+     *
      * @return Moip
      * @access public
      */
@@ -389,24 +394,25 @@ class Moip_Api
      * Add a payment's method
      *
      * @param string $way The payment method. Options: 'billet','financing','debit','creditCard','debitCard'.
+     *
      * @return Moip
      * @access public
      */
     public function addPaymentWay($way)
     {
-        if (!isset($this->payment_ways[$way]))
+        if (!isset($this->payment_ways[$way])) {
             $this->setError("Error: Payment method unavailable");
-        else
+        } else {
             $this->payment_way[] = $way;
-
+        }
 
         $instrucao = $this->xml->InstrucaoUnica;
 
-
         $formas = (!isset($instrucao->FormasPagamento)) ? $instrucao->addChild('FormasPagamento') : $instrucao->FormasPagamento;
 
-        if (!empty($this->payment_way))
+        if (!empty($this->payment_way)) {
             $formas->addChild('FormaPagamento', $this->payment_ways[$way]);
+        }
 
         return $this;
     }
@@ -420,48 +426,43 @@ class Moip_Api
      * @param boolean $workingDays expiration should be counted in working days?
      * @param array $instructions Additional payment instructions can be array of message or a message in string
      * @param string $uriLogo URL of the image to be displayed on docket (75x40)
+     *
      * @return void
      * @access public
      */
     public function setBilletConf($expiration, $workingDays = false, $instructions = null, $uriLogo = null)
     {
 
-        if (!isset($this->xml->InstrucaoUnica->Boleto))
-        {
+        if (!isset($this->xml->InstrucaoUnica->Boleto)) {
             $this->xml->InstrucaoUnica->addChild('Boleto');
 
-            if (is_numeric($expiration))
-            {
+            if (is_numeric($expiration)) {
                 $this->xml->InstrucaoUnica->Boleto->addChild('DiasExpiracao', $expiration);
 
-                if ($workingDays)
+                if ($workingDays) {
                     $this->xml->InstrucaoUnica->Boleto->DiasExpiracao->addAttribute('Tipo', 'Uteis');
-                else
+                } else {
                     $this->xml->InstrucaoUnica->Boleto->DiasExpiracao->addAttribute('Tipo', 'Corridos');
-            }else
-            {
+                }
+            } else {
                 $this->xml->InstrucaoUnica->Boleto->addChild('DataVencimento', $expiration);
             }
 
-            if (isset($instructions))
-            {
-                if (is_array($instructions))
-                {
+            if (isset($instructions)) {
+                if (is_array($instructions)) {
                     $numeroInstrucoes = 1;
-                    foreach ($instructions as $instrucaostr)
-                    {
+                    foreach ($instructions as $instrucaostr) {
                         $this->xml->InstrucaoUnica->Boleto->addChild('Instrucao' . $numeroInstrucoes, $instrucaostr);
                         $numeroInstrucoes++;
                     }
-                }
-                else
-                {
+                } else {
                     $this->xml->InstrucaoUnica->Boleto->addChild('Instrucao1', $instructions);
                 }
             }
 
-            if (isset($uriLogo))
+            if (isset($uriLogo)) {
                 $this->xml->InstrucaoUnica->Boleto->addChild('URLLogo', $uriLogo);
+            }
         }
 
         return $this;
@@ -473,6 +474,7 @@ class Moip_Api
      * Set contacts informations for the payer.
      *
      * @param array $payer Contact information for the payer.
+     *
      * @return Moip
      * @access public
      */
@@ -480,8 +482,7 @@ class Moip_Api
     {
         $this->payer = $payer;
 
-        if (!empty($this->payer))
-        {
+        if (!empty($this->payer)) {
             $p = $this->payer;
             $this->xml->InstrucaoUnica->addChild('Pagador');
             (isset($p['name'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Nome', $this->payer['name']) : null;
@@ -520,6 +521,7 @@ class Moip_Api
      * Set the transaction's value
      *
      * @param float $value The transaction's value
+     *
      * @return Moip
      * @access public
      */
@@ -527,12 +529,13 @@ class Moip_Api
     {
         $this->value = $value;
 
-        if (empty($this->value))
+        if (empty($this->value)) {
             $this->setError('Error: The transaction amount must be specified.');
+        }
 
         $this->xml->InstrucaoUnica->addChild('Valores')
-                ->addChild('Valor', $this->value)
-                ->addAttribute('moeda', 'BRL');
+            ->addChild('Valor', $this->value)
+            ->addAttribute('moeda', 'BRL');
 
         return $this;
     }
@@ -543,6 +546,7 @@ class Moip_Api
      * Adds a value on payment. Can be used for collecting fines, shipping and other
      *
      * @param float $value The value to add.
+     *
      * @return Moip
      * @access public
      */
@@ -550,10 +554,9 @@ class Moip_Api
     {
         $this->adds = $value;
 
-        if (isset($this->adds))
-        {
+        if (isset($this->adds)) {
             $this->xml->InstrucaoUnica->Valores->addChild('Acrescimo', $this->adds)
-                    ->addAttribute('moeda', 'BRL');
+                ->addAttribute('moeda', 'BRL');
         }
 
         return $this;
@@ -565,6 +568,7 @@ class Moip_Api
      * Deducts a payment amount. It is mainly used for discounts.
      *
      * @param float $value The value to deduct
+     *
      * @return Moip
      * @access public
      */
@@ -572,10 +576,9 @@ class Moip_Api
     {
         $this->deduction = $value;
 
-        if (isset($this->deduction))
-        {
+        if (isset($this->deduction)) {
             $this->xml->InstrucaoUnica->Valores->addChild('Deducao', $this->deduction)
-                    ->addAttribute('moeda', 'BRL');
+                ->addAttribute('moeda', 'BRL');
         }
 
         return $this;
@@ -587,17 +590,18 @@ class Moip_Api
      * Add a message in the instruction to be displayed to the payer.
      *
      * @param string $msg Message to be displayed.
+     *
      * @return Moip
      * @access public
      */
     public function addMessage($msg)
     {
-        if (!isset($this->xml->InstrucaoUnica->Mensagens))
-        {
+        if (!isset($this->xml->InstrucaoUnica->Mensagens)) {
             $this->xml->InstrucaoUnica->addChild('Mensagens');
         }
 
         $this->xml->InstrucaoUnica->Mensagens->addChild('Mensagem', $msg);
+
         return $this;
     }
 
@@ -607,15 +611,16 @@ class Moip_Api
      * Set the return URL, which redirects the client after payment.
      *
      * @param string $url Return URL
+     *
      * @return Moip
      * @access public
      */
     public function setReturnURL($url)
     {
-        if (!isset($this->xml->InstrucaoUnica->URLRetorno))
-        {
+        if (!isset($this->xml->InstrucaoUnica->URLRetorno)) {
             $this->xml->InstrucaoUnica->addChild('URLRetorno', $url);
         }
+
         return $this;
     }
 
@@ -625,12 +630,12 @@ class Moip_Api
      * Set the notification URL, which sends information about changes in payment status
      *
      * @param string $url Notification URL
+     *
      * @access public
      */
     public function setNotificationURL($url)
     {
-        if (!isset($this->xml->InstrucaoUnica->URLNotificacao))
-        {
+        if (!isset($this->xml->InstrucaoUnica->URLNotificacao)) {
             $this->xml->InstrucaoUnica->addChild('URLNotificacao', $url);
         }
     }
@@ -641,6 +646,7 @@ class Moip_Api
      * Set Erroe alert
      *
      * @param String $error Error alert
+     *
      * @return Moip
      * @access public
      */
@@ -661,30 +667,33 @@ class Moip_Api
      * @param number $value value of the division of payment
      * @param boolean $percentageValue percentage value should be
      * @param boolean $ratePayer this secondary recipient will pay the fee Moip
+     *
      * @return Moip
      * @access public
      */
     public function addComission($reason, $receiver, $value, $percentageValue = false, $ratePayer = false)
     {
 
-        if (!isset($this->xml->InstrucaoUnica->Comissoes))
+        if (!isset($this->xml->InstrucaoUnica->Comissoes)) {
             $this->xml->InstrucaoUnica->addChild('Comissoes');
+        }
 
-        if (is_numeric($value))
-        {
+        if (is_numeric($value)) {
 
             $split = $this->xml->InstrucaoUnica->Comissoes->addChild('Comissionamento');
             $split->addChild('Comissionado')->addChild('LoginMoIP', $receiver);
             $split->addChild('Razao', $reason);
 
-            if ($percentageValue == false)
+            if ($percentageValue == false) {
                 $split->addChild('ValorFixo', $value);
-            if ($percentageValue == true)
+            }
+            if ($percentageValue == true) {
                 $split->addChild('ValorPercentual', $value);
-            if ($ratePayer == true)
+            }
+            if ($ratePayer == true) {
                 $this->xml->InstrucaoUnica->Comissoes->addChild('PagadorTaxa')->addChild('LoginMoIP', $receiver);
-        }else
-        {
+            }
+        } else {
             $this->setError('Error: Value must be numeric.');
         }
 
@@ -700,44 +709,45 @@ class Moip_Api
      * @param int $max The maximum number of parcels.
      * @param float $rate The percentual value of rates
      * @param boolean $transfer "true" defines the amount of interest charged by MoIP installment to be paid by the payer
+     *
      * @return Moip
      * @access public
      */
     public function addParcel($min, $max, $rate = null, $transfer = false)
     {
-        if (!isset($this->xml->InstrucaoUnica->Parcelamentos))
-        {
+        if (!isset($this->xml->InstrucaoUnica->Parcelamentos)) {
             $this->xml->InstrucaoUnica->addChild('Parcelamentos');
         }
 
         $parcela = $this->xml->InstrucaoUnica->Parcelamentos->addChild('Parcelamento');
-        if (is_numeric($min) && $min <= 12)
+        if (is_numeric($min) && $min <= 12) {
             $parcela->addChild('MinimoParcelas', $min);
-        else
+        } else {
             $this->setError('Error: Minimum parcel can not be greater than 12.');
+        }
 
-        if (is_numeric($max) && $max <= 12)
+        if (is_numeric($max) && $max <= 12) {
             $parcela->addChild('MaximoParcelas', $max);
-        else
+        } else {
             $this->setError('Error: Maximum amount can not be greater than 12.');
+        }
 
         $parcela->addChild('Recebimento', 'AVista');
 
-        if ($transfer === false)
-        {
-            if (isset($rate))
-            {
-                if (is_numeric($rate))
+        if ($transfer === false) {
+            if (isset($rate)) {
+                if (is_numeric($rate)) {
                     $parcela->addChild('Juros', $rate);
-                else
+                } else {
                     $this->setError('Error: Rate must be numeric');
+                }
             }
-        }else
-        {
-            if (is_bool($transfer))
+        } else {
+            if (is_bool($transfer)) {
                 $parcela->addChild('Repassar', $transfer);
-            else
+            } else {
                 $this->setError('Error: Transfer must be boolean');
+            }
         }
 
         return $this;
@@ -749,15 +759,15 @@ class Moip_Api
      * Allows to add a order to parceling.
      *
      * @param string $receiver login Moip the secondary receiver
+     *
      * @return Moip
      * @access public
      */
     public function setReceiver($receiver)
     {
-        if (!isset($this->xml->InstrucaoUnica->Recebedor))
-        {
+        if (!isset($this->xml->InstrucaoUnica->Recebedor)) {
             $this->xml->InstrucaoUnica->addChild('Recebedor')
-                    ->addChild('LoginMoIP', $receiver);
+                ->addChild('LoginMoIP', $receiver);
         }
 
         return $this;
@@ -774,10 +784,12 @@ class Moip_Api
     public function getXML()
     {
 
-        if ($this->payment_type == "Identification")
+        if ($this->payment_type == "Identification") {
             $this->xml->InstrucaoUnica->addAttribute('TipoValidacao', 'Transparente');
+        }
 
         $return = $this->convert_encoding($this->xml->asXML(), true);
+
         return str_ireplace("\n", "", $return);
     }
 
@@ -787,6 +799,7 @@ class Moip_Api
      * Send the request to the server
      *
      * @param object $client The server's connection
+     *
      * @return MoipResponse
      * @access public
      */
@@ -794,8 +807,9 @@ class Moip_Api
     {
         $this->validate();
 
-        if ($client == null)
+        if ($client == null) {
             $client = new Moip_Client();
+        }
 
         $url = $this->environment->base_url . '/ws/alpha/EnviarInstrucao/Unica';
 
@@ -806,30 +820,28 @@ class Moip_Api
      * Method getAnswer()
      *
      * Gets the server's answer
+     *
      * @param boolean $return_xml_as_string Return the answer XMl string
+     *
      * @return MoipResponse|string
      * @access public
      */
     public function getAnswer($return_xml_as_string = false)
     {
-        if ($this->answer->response == true)
-        {
-            if ($return_xml_as_string)
-            {
+        if ($this->answer->response == true) {
+            if ($return_xml_as_string) {
                 return $this->answer->xml;
             }
 
             $xml = new SimpleXmlElement($this->answer->xml);
 
-            return new Moip_Response(array(
+            return new Moip_Response([
                 'response' => $xml->Resposta->Status == 'Sucesso' ? true : false,
-                'error' => $xml->Resposta->Status == 'Falha' ? $this->convert_encoding((string) $xml->Resposta->Erro) : false,
-                'token' => (string) $xml->Resposta->Token,
-                'payment_url' => $xml->Resposta->Status == 'Sucesso' ? (string) $this->environment->base_url . "/Instrucao.do?token=" . (string) $xml->Resposta->Token : false,
-            ));
-        }
-        else
-        {
+                'error' => $xml->Resposta->Status == 'Falha' ? $this->convert_encoding((string)$xml->Resposta->Erro) : false,
+                'token' => (string)$xml->Resposta->Token,
+                'payment_url' => $xml->Resposta->Status == 'Sucesso' ? (string)$this->environment->base_url . "/Instrucao.do?token=" . (string)$xml->Resposta->Token : false,
+            ]);
+        } else {
             return $this->answer->error;
         }
     }
@@ -843,14 +855,15 @@ class Moip_Api
      * @param int $maxParcel The total parcels
      * @param float $rate The rate's percents of the parcelling.
      * @param float $simulatedValue The value for simulation
+     *
      * @return array
      * @access public
      */
     public function queryParcel($login, $maxParcel, $rate, $simulatedValue)
     {
-        if (!isset($this->credential))
+        if (!isset($this->credential)) {
             $this->setError("You must specify the credentials (token / key) and enriroment");
-
+        }
 
         $client = new Moip_Client();
 
@@ -858,25 +871,27 @@ class Moip_Api
         $credential = $this->credential['token'] . ':' . $this->credential['key'];
         $answer = $client->curlGet($credential, $url, $this->errors);
 
-        if ($answer->response)
-        {
+        if ($answer->response) {
             $xml = new SimpleXmlElement($answer->xml);
 
-            if ($xml->Resposta->Status == "Sucesso")
+            if ($xml->Resposta->Status == "Sucesso") {
                 $response = true;
-            else
+            } else {
                 $response = false;
+            }
 
-            $return = array('response' => $response,
-                'installment' => array());
+            $return = [
+                'response' => $response,
+                'installment' => []
+            ];
 
             $i = 1;
-            foreach ($xml->Resposta->ValorDaParcela as $parcela)
-            {
+            foreach ($xml->Resposta->ValorDaParcela as $parcela) {
                 $attrib = $parcela->attributes();
-                $return['installment']["$i"] = array('total' => (string) $attrib['Total'], 'rate' => (string) $attrib['Juros'], 'value' => (string) $attrib['Valor']);
+                $return['installment']["$i"] = ['total' => (string)$attrib['Total'], 'rate' => (string)$attrib['Juros'], 'value' => (string)$attrib['Valor']];
                 $i++;
             }
+
             return $return;
         }
 
