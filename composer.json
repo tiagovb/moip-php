@@ -1,5 +1,5 @@
 {
-    "name": "jeanjar/moip-php",
+    "name": "tiagovb/moip-php",
     "description": "Fork da Biblioteca de integração com o MoIP em PHP",
     "license": "Apache v2",
     "authors": [
