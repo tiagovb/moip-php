@@ -8,7 +8,7 @@ class Moip_Api
      *
      * @var string
      */
-    public $encoding = 'ISO-8859-1';
+    public $encoding = 'UTF-8';
 
     /**
      * Associative array with two keys. 'key'=>'your_key','token'=>'your_token'
@@ -193,14 +193,14 @@ class Moip_Api
     private function convert_encoding($text, $post = false)
     {
         if ($post) {
-            return mb_convert_encoding($text, 'ISO-8859-1');
+            return mb_convert_encoding($text, 'UTF-8');
         } else {
             /* No need to convert if its already in utf-8 */
-            if ($this->encoding === 'ISO-8859-1') {
+            if ($this->encoding === 'UTF-8') {
                 return $text;
             }
 
-            return mb_convert_encoding($text, $this->encoding, 'ISO-8859-1');
+            return mb_convert_encoding($text, $this->encoding, 'UTF-8');
         }
     }
 
