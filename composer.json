@@ -9,9 +9,6 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
-        "electrolinux/phpquery": "dev-master"
-    },
     "autoload": {
         "psr-0": {
             "Moip": "src/"
