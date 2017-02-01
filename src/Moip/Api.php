@@ -8,7 +8,7 @@ class Moip_Api
      *
      * @var string
      */
-    public $encoding = 'UTF-8';
+    public $encoding = 'ISO-8859-1';
 
     /**
      * Associative array with two keys. 'key'=>'your_key','token'=>'your_token'
@@ -193,14 +193,14 @@ class Moip_Api
     private function convert_encoding($text, $post = false)
     {
         if ($post) {
-            return mb_convert_encoding($text, 'UTF-8');
+            return mb_convert_encoding($text, 'ISO-8859-1');
         } else {
             /* No need to convert if its already in utf-8 */
-            if ($this->encoding === 'UTF-8') {
+            if ($this->encoding === 'ISO-8859-1') {
                 return $text;
             }
 
-            return mb_convert_encoding($text, $this->encoding, 'UTF-8');
+            return mb_convert_encoding($text, $this->encoding, 'ISO-8859-1');
         }
     }
 
@@ -485,7 +485,7 @@ class Moip_Api
         if (!empty($this->payer)) {
             $p = $this->payer;
             $this->xml->InstrucaoUnica->addChild('Pagador');
-            (isset($p['name'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Nome', $this->payer['name']) : null;
+            (isset($p['name'])) ? $this->xml->InstrucaoUnica->Pagador->Nome = $this->payer['name'] : null;
             (isset($p['email'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Email', $this->payer['email']) : null;
             (isset($p['payerId'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('IdPagador', $this->payer['payerId']) : null;
             (isset($p['identity'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Identidade', $this->payer['identity']) : null;
