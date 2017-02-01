@@ -485,7 +485,7 @@ class Moip_Api
         if (!empty($this->payer)) {
             $p = $this->payer;
             $this->xml->InstrucaoUnica->addChild('Pagador');
-            (isset($p['name'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Nome', $this->payer['name']) : null;
+            (isset($p['name'])) ? $this->xml->InstrucaoUnica->Pagador->Nome = $this->payer['name'] : null;
             (isset($p['email'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Email', $this->payer['email']) : null;
             (isset($p['payerId'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('IdPagador', $this->payer['payerId']) : null;
             (isset($p['identity'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Identidade', $this->payer['identity']) : null;
