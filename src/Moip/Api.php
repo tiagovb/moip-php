@@ -8,7 +8,7 @@ class Moip_Api
      *
      * @var string
      */
-    public $encoding = 'ISO-8859-1';
+    public $encoding = 'UTF-8';
 
     /**
      * Associative array with two keys. 'key'=>'your_key','token'=>'your_token'
@@ -193,14 +193,14 @@ class Moip_Api
     private function convert_encoding($text, $post = false)
     {
         if ($post) {
-            return mb_convert_encoding($text, 'ISO-8859-1');
+            return mb_convert_encoding($text, 'UTF-8');
         } else {
             /* No need to convert if its already in utf-8 */
-            if ($this->encoding === 'ISO-8859-1') {
+            if ($this->encoding === 'UTF-8') {
                 return $text;
             }
 
-            return mb_convert_encoding($text, $this->encoding, 'ISO-8859-1');
+            return mb_convert_encoding($text, $this->encoding, 'UTF-8');
         }
     }
 
@@ -485,31 +485,31 @@ class Moip_Api
         if (!empty($this->payer)) {
             $p = $this->payer;
             $this->xml->InstrucaoUnica->addChild('Pagador');
-            (isset($p['name'])) ? $this->xml->InstrucaoUnica->Pagador->Nome = $this->payer['name'] : null;
-            (isset($p['email'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Email', $this->payer['email']) : null;
-            (isset($p['payerId'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('IdPagador', $this->payer['payerId']) : null;
-            (isset($p['identity'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('Identidade', $this->payer['identity']) : null;
-            (isset($p['phone'])) ? $this->xml->InstrucaoUnica->Pagador->addChild('TelefoneCelular', $this->payer['phone']) : null;
+            (isset($p['name'])) ? $this->xml->InstrucaoUnica->Pagador->Nome = $this->replaceXmlEntities($this->payer['name']) : null;
+            (isset($p['email'])) ? $this->xml->InstrucaoUnica->Pagador->Email = $this->replaceXmlEntities($this->payer['email']) : null;
+            (isset($p['payerId'])) ? $this->xml->InstrucaoUnica->Pagador->IdPagador = $this->replaceXmlEntities($this->payer['payerId']) : null;
+            (isset($p['identity'])) ? $this->xml->InstrucaoUnica->Pagador->Identidade = $this->replaceXmlEntities($this->payer['identity']) : null;
+            (isset($p['phone'])) ? $this->xml->InstrucaoUnica->Pagador->TelefoneCelular = $this->replaceXmlEntities($this->payer['phone']) : null;
 
             $p = $this->payer['billingAddress'];
             $this->xml->InstrucaoUnica->Pagador->addChild('EnderecoCobranca');
-            (isset($p['address'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('Logradouro', $this->payer['billingAddress']['address']) : null;
+            (isset($p['address'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->Logradouro = $this->replaceXmlEntities($this->payer['billingAddress']['address']) : null;
 
-            (isset($p['number'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('Numero', $this->payer['billingAddress']['number']) : null;
+            (isset($p['number'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->Numero = $this->replaceXmlEntities($this->payer['billingAddress']['number']) : null;
 
-            (isset($p['complement'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('Complemento', $this->payer['billingAddress']['complement']) : null;
+            (isset($p['complement'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->Complemento = $this->replaceXmlEntities($this->payer['billingAddress']['complement']) : null;
 
-            (isset($p['neighborhood'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('Bairro', $this->payer['billingAddress']['neighborhood']) : null;
+            (isset($p['neighborhood'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->Bairro = $this->replaceXmlEntities($this->payer['billingAddress']['neighborhood']) : null;
 
-            (isset($p['city'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('Cidade', $this->payer['billingAddress']['city']) : null;
+            (isset($p['city'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->Cidade = $this->replaceXmlEntities($this->payer['billingAddress']['city']) : null;
 
-            (isset($p['state'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('Estado', $this->payer['billingAddress']['state']) : null;
+            (isset($p['state'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->Estado = $this->replaceXmlEntities($this->payer['billingAddress']['state']) : null;
 
-            (isset($p['country'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('Pais', $this->payer['billingAddress']['country']) : null;
+            (isset($p['country'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->Pais = $this->replaceXmlEntities($this->payer['billingAddress']['country']) : null;
 
-            (isset($p['zipCode'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('CEP', $this->payer['billingAddress']['zipCode']) : null;
+            (isset($p['zipCode'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->CEP = $this->replaceXmlEntities($this->payer['billingAddress']['zipCode']) : null;
 
-            (isset($p['phone'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->addChild('TelefoneFixo', $this->payer['billingAddress']['phone']) : null;
+            (isset($p['phone'])) ? $this->xml->InstrucaoUnica->Pagador->EnderecoCobranca->TelefoneFixo = $this->replaceXmlEntities($this->payer['billingAddress']['phone']) : null;
         }
 
         return $this;
@@ -896,6 +896,16 @@ class Moip_Api
         }
 
         return $answer;
+    }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     */
+    protected function replaceXmlEntities($string)
+    {
+        return preg_replace('/&|\'|"|<|>/', '', $string);
     }
 
 }
